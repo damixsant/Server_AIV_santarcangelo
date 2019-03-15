@@ -238,159 +238,7 @@ namespace TaskServer.Test
         }
 
 
-        // Test - spostare un oggetto che non è tuo
-        [Test]
-        public void TestEvilUpdateGreenLight()
-        {
-
-            // TODO ottiene l'id dai pacchetti di benvenuto
-            Packet packet = new Packet(0);
-            transport.ClientEnqueue(packet, "tester", 0);
-            server.SingleStep();
-            uint avatarId = BitConverter.ToUInt32(transport.ClientDequeue().data, 5);
-
-            // riavvia GameObj da avatrId e memorizza la sua posizione
-            transport.ClientEnqueue(packet, "foobar", 1);
-            server.SingleStep();
-
-
-            // riavvia GameObj da avatarId e controlla la sua posizione precedente
-            GameObject testerObj = server.GetGameObj(avatarId);
-            Assert.That(testerObj, Is.Not.EqualTo(null));
-            //prende la posizione della parentela (posizione di base)
-            float startX = testerObj.X;
-            float startY = testerObj.Y;
-            float startZ = testerObj.Z;
-            float offsetX = 10.0f;
-            float offsetY = 20.0f;
-            float offsetZ = 30.0f;
-            Packet movePacket = new Packet(3, avatarId, offsetX, offsetY, offsetZ);
-            transport.ClientEnqueue(packet, "foobar", 1);
-            server.SingleStep();
-
-            // prende una nuova posizione dopo il movimento
-
-            float newX = testerObj.X;
-            float newY = testerObj.Y;
-            float newZ = testerObj.Z;
-
-            // controlla la posizione precedente e dopo il movimento; 
-            // il valore dovrebbe essere lo stesso perché il movimento non dovrebbe accadere
-            Assert.That(startX, Is.EqualTo(newX));
-            Assert.That(startY, Is.EqualTo(newY));
-            Assert.That(startZ, Is.EqualTo(newZ));
-        }
-        [Test]
-        public void TestEvilUpdateRedLight()
-        {
-            // TODO ottiene l'id dai pacchetti di benvenuto
-            Packet packet = new Packet(0);
-            transport.ClientEnqueue(packet, "tester", 0);
-            server.SingleStep();
-            uint avatarId = BitConverter.ToUInt32(transport.ClientDequeue().data, 5);
-
-            // riavvia GameObj da avatrId e memorizza la sua posizione
-
-            transport.ClientEnqueue(packet, "foobar", 1);
-            server.SingleStep();
-
-
-            // riavvia GameObj da avatarId e controlla la sua posizione precedente
-            GameObject testerObj = server.GetGameObj(avatarId);
-            Assert.That(testerObj, Is.Not.EqualTo(null));
-            //prende la posizione della parentela (posizione di base)
-            float startX = testerObj.X;
-            float startY = testerObj.Y;
-            float startZ = testerObj.Z;
-            float offsetX = 10.0f;
-            float offsetY = 20.0f;
-            float offsetZ = 30.0f;
-            Packet movePacket = new Packet(3, avatarId, offsetX, offsetY, offsetZ);
-            transport.ClientEnqueue(packet, "foobar", 1);
-            server.SingleStep();
-
-            // prende una nuova posizione dopo il movimento
-            float newX = testerObj.X;
-            float newY = testerObj.Y;
-            float newZ = testerObj.Z;
-            // controlla la posizione precedente e dopo il movimento; 
-            // il valore dovrebbe essere lo stesso perché il movimento non dovrebbe accadere
-            Assert.That(newX, Is.Not.EqualTo(startX + offsetX));
-            Assert.That(newY, Is.Not.EqualTo(startY + offsetY));
-            Assert.That(newZ, Is.Not.EqualTo(startZ + offsetZ));
-        }
-
-
-        // Test - il movimento corretto di un oggetto che non è tuo e malus dal suo proprietario
-        [Test]
-        public void TestMoveUpdateGreenLight()
-        {
-
-            // TODO ottiene l'id dai pacchetti di benvenuto
-            Packet packet = new Packet(0);
-            transport.ClientEnqueue(packet, "tester", 0);
-            server.SingleStep();
-            uint avatarId = BitConverter.ToUInt32(transport.ClientDequeue().data, 5);
-
-            // riavvia GameObj da avatrId e memorizza la sua posizione
-
-
-            // riavvia GameObj da avatarId e controlla la sua posizione precedente
-            GameObject testerObj = server.GetGameObj(avatarId);
-            Assert.That(testerObj, Is.Not.EqualTo(null));
-            //prende la posizione della parentela (posizione di base)
-            float startX = testerObj.X;
-            float startY = testerObj.Y;
-            float startZ = testerObj.Z;
-            float offsetX = 10.0f;
-            float offsetY = 20.0f;
-            float offsetZ = 30.0f;
-            Packet movePacket = new Packet(3, avatarId, offsetX, offsetY, offsetZ);
-            transport.ClientEnqueue(packet, "tester", 0);
-            server.SingleStep();
-            // prende una nuova posizione dopo il movimento
-            float newX = testerObj.X;
-            float newY = testerObj.Y;
-            float newZ = testerObj.Z;
-            float endX = startX + offsetX;
-            // controlla la posizione precedente e dopo il movimento; 
-            // il valore dovrebbe essere lo stesso perché il movimento non dovrebbe accadere
-            Assert.That(newX, Is.EqualTo(endX));
-            Assert.That(newY, Is.EqualTo(startY + offsetY));
-            Assert.That(newZ, Is.EqualTo(startZ + offsetZ));
-        }
-        [Test]
-        public void TestMoveUpdateRedLight()
-        {
-            // TODO ottiene l'id dai pacchetti di benvenuto
-            Packet packet = new Packet(0);
-            transport.ClientEnqueue(packet, "tester", 0);
-            server.SingleStep();
-            uint avatarId = BitConverter.ToUInt32(transport.ClientDequeue().data, 5);
-            // riavvia GameObj da avatrId e memorizza la sua posizione
-            /// riavvia GameObj da avatarId e controlla la sua posizione precedente
-            GameObject testerObj = server.GetGameObj(avatarId);
-            Assert.That(testerObj, Is.Not.EqualTo(null));
-            //prende la posizione della parentela (posizione di base)
-            float startX = testerObj.X;
-            float startY = testerObj.Y;
-            float startZ = testerObj.Z;
-            float offsetX = 10.0f;
-            float offsetY = 20.0f;
-            float offsetZ = 30.0f;
-            Packet movePacket = new Packet(3, avatarId, offsetX, offsetY, offsetZ);
-            transport.ClientEnqueue(packet, "tester", 0);
-            server.SingleStep();
-            // prende una nuova posizione dopo il movimento
-            float newX = testerObj.X;
-            float newY = testerObj.Y;
-            float newZ = testerObj.Z;
-            // controlla la posizione precedente e dopo il movimento; 
-            // il valore dovrebbe essere lo stesso perché il movimento non dovrebbe accadere
-            Assert.That(newX, Is.Not.EqualTo(startX));
-            Assert.That(newY, Is.Not.EqualTo(startY));
-            Assert.That(newZ, Is.Not.EqualTo(startZ));
-        }
+       
 
         //Test - malus
         [Test]
@@ -403,7 +251,7 @@ namespace TaskServer.Test
 
 
             // riavvia GameObj da avatarId e controlla la sua posizione precedente
-            Avatar testerObj = (Avatar)server.GetGameObj(avatarId);
+            Avatar testerObj = (Avatar)server.GetGameObject(avatarId);
             Assert.That(testerObj, Is.Not.EqualTo(null));
 
             // controlla GameClient malus alla creazione
@@ -425,7 +273,7 @@ namespace TaskServer.Test
             uint avatarId = BitConverter.ToUInt32(transport.ClientDequeue().data, 5);
 
             // riavvia GameObj da avatarId e controlla la sua posizione precedente
-            Avatar testerObj = (Avatar)server.GetGameObj(avatarId);
+            Avatar testerObj = (Avatar)server.GetGameObject(avatarId);
             Assert.That(testerObj, Is.Not.EqualTo(null));
             // controlla GameClient malus alla creazione
             uint testerMalus = testerObj.Malus;
@@ -455,7 +303,7 @@ namespace TaskServer.Test
 
 
             // riavvia GameObj da avatarId e controlla la sua posizione precedente
-            Avatar testerObj = (Avatar)server.GetGameObj(avatarId);
+            Avatar testerObj = (Avatar)server.GetGameObject(avatarId);
             Assert.That(testerObj, Is.Not.EqualTo(null));
 
             // controlla GameClient malus alla creazione
@@ -501,7 +349,7 @@ namespace TaskServer.Test
 
 
             // riavvia GameObj da avatarId e controlla la sua posizione precedente
-            Avatar testerObj = (Avatar)server.GetGameObj(avatarId);
+            Avatar testerObj = (Avatar)server.GetGameObject(avatarId);
             Assert.That(testerObj, Is.Not.EqualTo(null));
 
             // controlla GameClient malus alla creazione
@@ -542,7 +390,7 @@ namespace TaskServer.Test
 
 
             // riavvia GameObj da avatarId e controlla la sua posizione precedente
-            Avatar testerObj = (Avatar)server.GetGameObj(avatarId);
+            Avatar testerObj = (Avatar)server.GetGameObject(avatarId);
             Assert.That(testerObj, Is.Not.EqualTo(null));
 
             // controlla GameClient malus alla creazione
@@ -569,7 +417,7 @@ namespace TaskServer.Test
             uint avatarId = BitConverter.ToUInt32(transport.ClientDequeue().data, 5);
 
             // riavvia GameObj da avatarId e controlla la sua posizione precedente
-            Avatar testerObj = (Avatar)server.GetGameObj(avatarId);
+            Avatar testerObj = (Avatar)server.GetGameObject(avatarId);
             Assert.That(testerObj, Is.Not.EqualTo(null));
             // controlla GameClient malus alla creazione
             uint testerMalus = testerObj.Malus;

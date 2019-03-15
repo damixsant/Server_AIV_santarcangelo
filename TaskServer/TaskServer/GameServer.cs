@@ -273,7 +273,7 @@ namespace TaskServer
             return newGameObject;
         }
 
-        public GameObject GetGameObj(uint objId)
+        public GameObject GetGameObject(uint objId)
         {
             if (gameObjectsTab.ContainsKey(objId))
                 return gameObjectsTab[objId];
